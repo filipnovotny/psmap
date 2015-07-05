@@ -20,7 +20,10 @@ argparser.add_argument('-dbuser', default='root', help='database login')
 argparser.add_argument('-dbpass',  default='', help='database password')
 argparser.add_argument('-dbname', default='planningcapex', help='database name')
 
+argparser.add_argument('-apikey', default='AIzaSyAGNS0KorSJ6bRl1aV9uExQ2KWju2m89co', help='google maps api key')
+
 argparser.add_argument('-dontfilllocations', action="store_true", help='do not fill regions, towns into table')
+
 
 args = argparser.parse_args()
 
@@ -89,7 +92,7 @@ for placemark in doc.Document.Folder.Placemark:
 		#print("##### processing record "+ placemark.name.text)
 		while (True):
 			try:
-				results = Geocoder('AIzaSyBSrBoayfbXR1j3DEY7Rkru-EmVfuODVoM').reverse_geocode(float(coords[1]),float(coords[0]))
+				results = Geocoder(args.apikey).reverse_geocode(float(coords[1]),float(coords[0]))
 				break;
 			except GeocoderError:
 				sys.stderr.write("WARNING: Too many queries, Geocoder blocked. Waiting to be authorized again (%d) seconds...\n" % timeout);
