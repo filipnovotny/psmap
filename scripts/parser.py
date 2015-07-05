@@ -12,8 +12,20 @@ import time
 import sys
 import argparse
 
-kml_file = 'D:\\coding\\postessecours\\ps.kml'
-f = open(kml_file)
+argparser = argparse.ArgumentParser(description='Insert data into db.')
+argparser.add_argument('-kml_path', default='ps.kml', help='path of the kml file to process')
+argparser.add_argument('-filter_table', default='gpc_ps', help='Only reference entries from this table')
+argparser.add_argument('-dbhost', default='localhost', help='database host')
+argparser.add_argument('-dbuser', default='root', help='database login')
+argparser.add_argument('-dbpass',  default='', help='database password')
+argparser.add_argument('-dbname', default='planningcapex', help='database name')
+
+argparser.add_argument('-dontfilllocations', action="store_true", help='do not fill regions, towns into table')
+
+args = argparser.parse_args()
+
+
+f = open(args.kml_path)
 doc = parser.parse(f).getroot()
 
 cnt=0
@@ -34,42 +46,36 @@ ure_dict = []
 
 inputfile = ''
 outputfile = ''
-
-parser = argparse.ArgumentParser(description='Insert data into db.')
-parser.add_argument('-kml_path', default='ps.kml', help='path of the kml file to process')
-parser.add_argument('-filter_table', default='gpc_ps', help='Only reference entries from this table')
-
-args = parser.parse_args()
-
 	
 
-db=MySQLdb.connect('localhost', 'root', '', 'planningcapex')
+db=MySQLdb.connect(args.dbhost, args.dbuser, args.dbpass, args.dbname)
 
-for reg_name in regions_names:
-	region_dict[reg_name] = (Region(db,reg_name))
-	region_dict[reg_name].execute_insert()
-	
+if not args.dontfilllocations:
+	for reg_name in regions_names:
+		region_dict[reg_name] = (Region(db,reg_name))
+		region_dict[reg_name].execute_insert()
+		
 
-for bigcity_depid,bigcity_name in departement_capitals.items():
-	bigcity_dict[bigcity_name]=(BigCity(db,bigcity_name,region_dict[regions[bigcity_depid]].idx))
-	bigcity_dict[bigcity_name].execute_insert()
+	for bigcity_depid,bigcity_name in departement_capitals.items():
+		bigcity_dict[bigcity_name]=(BigCity(db,bigcity_name,region_dict[regions[bigcity_depid]].idx))
+		bigcity_dict[bigcity_name].execute_insert()
 
-for reg_name in regions_names:
-	ure = Ure(db,reg_name,region_dict[reg_name].idx)
-	ure_dict.append(ure)
-	ure.execute_insert()
-	
-print ("################ REGION NAMES (gpc_plaques) ####################")
-for key, value in region_dict.items():
-	print(value.db_statement())
+	for reg_name in regions_names:
+		ure = Ure(db,reg_name,region_dict[reg_name].idx)
+		ure_dict.append(ure)
+		ure.execute_insert()
+		
+	print ("################ REGION NAMES (gpc_plaques) ####################")
+	for key, value in region_dict.items():
+		print(value.db_statement())
 
-print ("################ URE (gpc_ure) ####################")
-for ure in ure_dict:
-	print(ure.db_statement())
-	
-print ("################ CITIES (gpc_ameps) ####################")
-for key, value in bigcity_dict.items():
-	print(value.db_statement())
+	print ("################ URE (gpc_ure) ####################")
+	for ure in ure_dict:
+		print(ure.db_statement())
+		
+	print ("################ CITIES (gpc_ameps) ####################")
+	for key, value in bigcity_dict.items():
+		print(value.db_statement())
 
 
 print ("################ PLACES (gpc_ps_tmp) ####################")
