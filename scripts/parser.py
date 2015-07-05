@@ -90,31 +90,37 @@ for placemark in doc.Document.Folder.Placemark:
 	if (args.filter_table and transfo_light.is_present(args.filter_table)) or args.filter_table=="": #only treat existing records
 		timeout = 1
 		#print("##### processing record "+ placemark.name.text)
-		while (True):
-			try:
-				results = Geocoder(args.apikey).reverse_geocode(float(coords[1]),float(coords[0]))
-				break;
-			except GeocoderError:
-				sys.stderr.write("WARNING: Too many queries, Geocoder blocked. Waiting to be authorized again (%d) seconds...\n" % timeout);
-				sys.stderr.flush()
-				time.sleep(timeout)
-				timeout*=2
+		if not args.dontfilllocations:
+			while (True):
+				try:
+					results = Geocoder(args.apikey).reverse_geocode(float(coords[1]),float(coords[0]))
+					break;
+				except GeocoderError:
+					sys.stderr.write("WARNING: Too many queries, Geocoder blocked. Waiting to be authorized again (%d) seconds...\n" % timeout);
+					sys.stderr.flush()
+					time.sleep(timeout)
+					timeout*=2
 		
 		#department code has 3 or 2 characters
-		reg_code = str(results[0].postal_code)[:3]
-		if not (reg_code in regions):
-			reg_code = str(results[0].postal_code)[:2]
-			
-		if reg_code in regions:
-			#print (cnt,".",placemark.name.text)
-			reg_name = regions[reg_code]
-			bigcity_name = departement_capitals[reg_code]
-			transfo = Transfo(db,placemark.name.text, region_dict[reg_name].idx,bigcity_dict[bigcity_name].idx,[float(coords[1]),float(coords[0])])
-			transfo.execute_insert()
-			print(transfo.db_statement())
-			transfo_idx+=1
+		if not args.dontfilllocations:
+			reg_code = str(results[0].postal_code)[:3]
+			if not (reg_code in regions):
+				reg_code = str(results[0].postal_code)[:2]
+		
+		if args.dontfilllocations:
+			transfo_light.execute_insert()
+			print(transfo_light.db_statement())
 		else:
-			print ("[SPEC]",cnt,".",placemark.name.text)
-			print(reg_code)
+			if reg_code in regions:
+				#print (cnt,".",placemark.name.text)
+				reg_name = regions[reg_code]
+				bigcity_name = departement_capitals[reg_code]
+				transfo = Transfo(db,placemark.name.text, region_dict[reg_name].idx,bigcity_dict[bigcity_name].idx,[float(coords[1]),float(coords[0])])
+				transfo.execute_insert()
+				print(transfo.db_statement())
+				transfo_idx+=1
+			else:
+				print ("[SPEC]",cnt,".",placemark.name.text)
+				print(reg_code)
 			
 		#print ("---")
