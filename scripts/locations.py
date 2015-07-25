@@ -114,7 +114,8 @@ class Transfo(Location):
 			self.name = name
 			self.short_name = parts[-1]
 			if (self.short_name != self.generate_shortname(name)):
-				sys.stderr.write("WARNING for string %s: shortname not compatible. Generated %s. Expected: %s.\n" % (tmp_name,self.generate_shortname(name),self.short_name))
+				#sys.stderr.write("WARNING for string %s: shortname not compatible. Generated %s. Expected: %s.\n" % (tmp_name,self.generate_shortname(name),self.short_name))
+				pass
 		else:
 			self.short_name = self.generate_shortname(name)
 		
