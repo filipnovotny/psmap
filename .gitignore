@@ -7,6 +7,7 @@ vendor
 .htaccess
 settings.php
 application/config/database.php
+application/config/config.php
 scripts/*.txt
 composer.bat
 composer.lock
