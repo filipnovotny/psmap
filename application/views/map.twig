@@ -5,9 +5,9 @@
 {% block navbar_title_text %}Carte des centres{% endblock %}
 
 {% block navbar_links %}
-<li class="active"><a href="/">Carte</a></li>
-<li><a href="/about/">A propos</a></li>
-<li><a href="/contact/">Contact</a></li>
+<li class="active"><a href="{{BASE_URL}}">Carte</a></li>
+<li><a href="{{BASE_URL}}/about/">A propos</a></li>
+<li><a href="{{BASE_URL}}/contact/">Contact</a></li>
 {% endblock %}
 
 {% block ng_app_name %}standalonemap{% endblock %}
