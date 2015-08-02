@@ -1,0 +1,6 @@
+{
+    "require": {
+        "ellislab/codeigniter": "3.*",
+        "twig/twig" : "1.*"
+    }
+}

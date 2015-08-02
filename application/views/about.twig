@@ -1,0 +1,65 @@
+{% extends "base.twig" %}
+
+{% block navbar_title_text %}Carte des centres{% endblock %}
+
+{% block title_text %}Demo de carte autonome: A propos{% endblock %}
+
+{% block inclusions_css %}
+<!-- Bootstrap core CSS -->
+<link href="{{STATIC_URL}}dist/bootstrap/css/bootstrap.min.css" rel="stylesheet">
+<!-- Custom styles for this template -->
+<link href="{{STATIC_URL}}map.css" rel="stylesheet">
+{% endblock %}
+
+
+{% block navbar_links %}
+<li><a href="/">Carte</a></li>
+<li class="active"><a href="/about/">A propos</a></li>
+<li><a href="/contact/">Contact</a></li>
+{% endblock %}
+
+{% block container %}
+<div class="row">
+  <div class="col-md-12">
+    <h2>A propos</h2>
+    <p>Ceci est le livrable de demo issu de l&#39;étude preliminaire. </p>
+    <p>
+      Il s&#39;agit d&#39;une page web contenant une carte de France zoomable et navigable. Sur cette carte se trouveront plusieurs marqueurs. La zone autour d&#39;un de ces marqueurs (Saint-Cannat) sera davantage détaillée que le reste de la France (on pourra zoomer davantage autour). 
+    </p>
+    <p>
+      L&#39;utilisateur a la possibilité de cliquer sur les marqueur et ceci affichera une infobulle le décrivant.
+    </p>
+    <p>
+      Cette demo est programmee pour fonctionner de facon autonome sur un systeme deconnecte d&#39;internet. Impossible donc d&#39;utiliser <em>google maps</em> ou assimiles.
+    </p>
+    <div class="alert alert-info" role="alert">
+      <strong>Exemple d&#39;utilisation:</strong>
+      <ul>
+      <li>Naviguez sur la carte en zoomant ou deplacant</li>
+      <li>Selectionnez un marqueur (clic)</li>
+      <li>Dans la fenetre qui s&#39;affiche, cliquez sur le lien</li>
+      <li>Verifiez que la zone descriptive en haut a droite a change</li>
+      </ul>
+    </div>
+
+    <p>
+    Fonctionnalites que cette demo demontre:
+    </p>
+    <ul>
+      <li>Carte autonome sans internet.</li>
+      <li>Niveaux de zoom variables par zones</li>
+      <li>Placement de marqueurs</li>
+      <li>Legende sur les marqueurs</li>
+      <li>Interaction avec les marqueirs (panneau de droite)</li>
+      <li>Compatibilite navigateurs vieux/exotiques: jusqu&#39;a Internet Explorer 9+</li>
+      <li>Interaction avec les marqueirs (panneau de droite)</li>
+    </ul>
+  </div>        
+</div>
+{% endblock %}
+
+{% block copyright_text %}Labscinet 2015{% endblock %}
+{% block inclusions_js %}
+<script src="{{STATIC_URL}}dist/jquery/jquery-1.11.2.min.js"></script>
+<script src="{{STATIC_URL}}dist/bootstrap/js/bootstrap.min.js"></script>
+{% endblock %}

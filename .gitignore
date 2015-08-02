@@ -1,3 +1,6 @@
 *.pyc
 *.exe
 psenv
+application/cache
+static/dist
+vendor
