@@ -4,3 +4,9 @@ psenv
 application/cache
 static/dist
 vendor
+.htaccess
+settings.php
+application/config/database.php
+scripts/*.txt
+composer.bat
+composer.lock

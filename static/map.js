@@ -19,7 +19,7 @@ app.controller("defaultcontroller", [ '$scope','$http', function($scope,$http) {
 			
 		});
 
-	 $http.get('http://localhost/ps/?format=json').
+	 $http.get('http://dtserv.labscinet.com/ps/?format=json').
         success(function(data) {
             var markers = [];
             for (var i in data) {
