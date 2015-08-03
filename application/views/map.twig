@@ -45,6 +45,17 @@
 
 {% block copyright_text %}Labscinet 2015{% endblock %}
 
- {% block inclusions_js_custom %}
+
+{% block inclusions_js_3rdparty %}
+<script src="{{STATIC_URL}}dist/jquery/jquery-1.11.2.min.js"></script>
+<script src="{{STATIC_URL}}dist/angular/angular.min.js"></script>
+<script src="{{STATIC_URL}}dist/angular/angular-sanitize.min.js"></script>
+<script src="{{STATIC_URL}}dist/bootstrap/js/bootstrap.min.js"></script>
+<script src="{{STATIC_URL}}dist/openlayers/ol.js"></script>
+<script src="{{STATIC_URL}}dist/ol3-popup/ol3-popup.js"></script>
+<script src="{{STATIC_URL}}dist/angular-openlayers-directive/angular-openlayers-directive.js"></script>
+<script src="{{STATIC_URL}}dist/underscore.string/underscore.string.js"></script>
+{% endblock %}
+{% block inclusions_js_custom %}
 <script src="{{STATIC_URL}}map.js"></script>
 {% endblock %}

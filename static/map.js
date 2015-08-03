@@ -5,11 +5,16 @@ Or this file can also be php-generated.
 
 */
 
+function build_adapted_url($location,ending){
+	return s.sprintf("%s://%s%s%s/%s", $location.protocol(),$location.host(),$location.port()==80?"":":"+$location.port(),$location.path(),ending);
+}
+
 var app = angular.module('standalonemap', ['openlayers-directive']);
 app.config(function($interpolateProvider){
     $interpolateProvider.startSymbol('{[{').endSymbol('}]}');
 });
-app.controller("defaultcontroller", [ '$scope','$http', function($scope,$http) {
+
+app.controller("defaultcontroller", [ '$scope','$http','$location', function($scope,$http,$location) {
 	angular.extend($scope, {
 			defaults: {
 				interactions: {
@@ -19,7 +24,7 @@ app.controller("defaultcontroller", [ '$scope','$http', function($scope,$http) {
 			
 		});
 
-	 $http.get('http://dtserv.labscinet.com/~dt/psmap/ps/?format=json').
+	 $http.get(build_adapted_url($location,"ps/?format=json")).
         success(function(data) {
             var markers = [];
             for (var i in data) {
