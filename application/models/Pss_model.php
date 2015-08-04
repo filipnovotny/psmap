@@ -4,6 +4,13 @@ class Pss_model extends CI_Model {
 		protected $gpc_ps_table;
 		protected $pk;
 
+        protected function make_kml_item($ps){
+            foreach (get_object_vars($ps) as $attribute => $value) {
+               
+            }
+
+        }
+
         public function __construct()
         {
             $this->load->database();
@@ -17,7 +24,7 @@ class Pss_model extends CI_Model {
         }
 
         private function join_ps_and_projects(){
-        	$this->db->select('idgpc_ps, PS_Nom, PS_Nat, PS_Longitude, PS_Latitude, count(idgpc_ps) as PS_Nb_Projects');
+        	$this->db->select('idgpc_ps, PS_Nom, PS_Nat, PS_Longitude, PS_Latitude, PS_Confiance, count(idgpc_ps) as PS_Nb_Projects');
 			$this->db->from($this->gpc_ps_table);
 			$this->db->join('gpc_projets', sprintf('%s.idgpc_ps = gpc_projets.PR_PS',$this->gpc_ps_table));
 			$this->db->where('PS_Supprime',0);
@@ -34,6 +41,9 @@ class Pss_model extends CI_Model {
 
         public function get_all(){
         	$this->join_ps_and_projects();
+
+
+            //$this->db->where('PS_Confiance',2);
 
         	$query = $this->db->get();
 			return $query->result();

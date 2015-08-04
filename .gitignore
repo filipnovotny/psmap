@@ -11,3 +11,4 @@ application/config/config.php
 scripts/*.txt
 composer.bat
 composer.lock
+tiles

@@ -106,8 +106,8 @@
 
     </div><!-- /.container -->
     {% endblock %}
-    {% block inclusions_js %}
-    
+    {% block inclusions_js %}    
+    <script src="{{STATIC_URL}}settings{% if config.JSDEBUG %}_debug{% endif %}.js"></script>
     {% block inclusions_js_3rdparty %}
     <script src="{{STATIC_URL}}dist/jquery/jquery-1.11.2.min.js"></script>
     <script src="{{STATIC_URL}}dist/angular/angular.min.js"></script>

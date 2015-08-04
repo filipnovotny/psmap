@@ -80,7 +80,7 @@ def get_coordinates_by_name(kml_filename,name,code, match_class=0):
 				except:
 					code = code[:-1] + "0"
 					
-				places[0][code] = coords
+				places[0][code] = (float(coords[1]),float(coords[0]))
 				return code,places[0][code],1
 			else:
 				if code in places[0]: #has the same code but is 
@@ -89,9 +89,9 @@ def get_coordinates_by_name(kml_filename,name,code, match_class=0):
 					continue
 				elif name in places[1]: #
 					print("dupplicate name but its ok! : %s,%s" % (code,name))
-					places[0][code] = coords				
+					places[0][code] = (float(coords[1]),float(coords[0]))				
 				else:
-					places[0][code] = coords
+					places[0][code] = (float(coords[1]),float(coords[0]))
 			return code,places[0][code],0,"Correspondance par code seul, nom non modifié. Actuel(BDD): %s Fichier edf: %s" % (name,transfo_light.name)
 
 		elif (similar(process_name(transfo_light.name) , process_name(name))) > 0.6 and match_class==3:

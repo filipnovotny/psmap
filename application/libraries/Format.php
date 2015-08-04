@@ -225,6 +225,51 @@ class Format {
 	public function to_json()
 	{
 		$callback = isset($_GET['callback']) ? $_GET['callback'] : '';
+		$type = isset($_GET['type']) ? $_GET['type'] : '';
+		if($type != ''){			
+			$latitude = isset($_GET['lat']) ? $_GET['lat'] : 'lat';
+			$longitude = isset($_GET['lon']) ? $_GET['lon'] : 'lon';
+
+			
+			if(count($this->_data)>1){
+				$geo_arr = array("type" => "FeatureCollection", "features" => array());
+				foreach($this->_data as $item){
+					$geo_item = array();
+					$geo_item["type"] = "Feature";
+					
+					if(isset($item->$latitude) && isset($item->$longitude)){
+						$lat_val = $item->$latitude;
+						$lon_val = $item->$longitude;
+						
+						$geo_item["geometry"] 	= array("type" => "Point", "coordinates" => array(floatval($lon_val), floatval($lat_val)));
+
+						unset($item->$latitude);
+						unset($item->$latitude);
+					}
+					$geo_item["properties"] = $item;
+
+					array_push($geo_arr["features"], $geo_item);	
+				}
+				$this->_data = $geo_arr;
+			}else{
+				$geo_item = array();
+				$geo_item["type"] = "Feature";
+				
+				if(isset($this->_data->$latitude) && isset($this->_data->$longitude)){
+					$lat_val = $this->_data->$latitude;
+					$lon_val = $this->_data->$longitude;
+					
+					$geo_item["geometry"] 	= array("type" => "Point", "coordinates" => array(floatval($lon_val), floatval($lat_val)));
+
+					unset($this->_data->$latitude);
+					unset($this->_data->$longitude);
+				}
+				$geo_item["properties"] = $this->_data;
+
+				$this->_data = $geo_item;
+			}
+		}
+		
 		if ($callback === '')
 		{
             return json_encode($this->_data);
