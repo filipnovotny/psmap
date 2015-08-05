@@ -1,5 +1,5 @@
 function build_adapted_url($location,ending){
-	return s.sprintf("%s://%s%s",  $location.absUrl(),ending);
+	return s.sprintf("%s%s",  $location.absUrl(),ending);
 }
 
 function make_marker_style($location, name){
