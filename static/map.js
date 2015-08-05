@@ -1,5 +1,5 @@
 function build_adapted_url($location,ending){
-	return s.sprintf("%s://%s%s%s/%s", $location.protocol(),$location.host(),$location.port()==80?"":":"+$location.port(),$location.path(),ending);
+	return s.sprintf("%s://%s%s",  $location.absUrl(),ending);
 }
 
 function make_marker_style($location, name){
