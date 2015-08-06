@@ -38,7 +38,8 @@ app.controller("defaultcontroller", [ '$scope','$http','$location','olData', 'ol
 					mouseWheelZoom: true
 				},
 				events: {
-                    layers: [ 'mousemove', 'click' ]
+                    layers: [ 'click' ],
+                    map: [ 'click' ]
                 }
 			},
 			markers : {
@@ -50,6 +51,13 @@ app.controller("defaultcontroller", [ '$scope','$http','$location','olData', 'ol
 	            style: build_style($location),
 
 	        },
+	        tiles : {
+				name : 'tiles',
+				source: {
+	                type: 'OSM',
+	                url: build_adapted_url($location,"tiles/{z}/{x}/{y}.png"),
+	            },
+	        },
 
 		});
 	var popup = new ol.Overlay.Popup();
@@ -59,6 +67,10 @@ app.controller("defaultcontroller", [ '$scope','$http','$location','olData', 'ol
 				var coord = map.getEventCoordinate(olEvent);
 				var props = feature.getProperties();
 			    popup.show(coord, props.PS_Nom);
+            });
+
+		$scope.$on('openlayers.map.click', function(evt, feature, olEvent) {
+				popup.hide();
             });
         });
 } ]);

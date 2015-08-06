@@ -18,7 +18,7 @@
                 <h2>Carte</h2>
                 <openlayers lat="48.8567" lon="2.3508" zoom="5" height="400" custom-layers="true" ol-defaults="defaults">
                     <!--declare the tile layer. HERE REPLACE THE SOURCE-URL by something meaningful -->
-                    <ol-layer source-type="OSM" source-url="{{BASE_URL}}tiles/{z}/{x}/{y}.png"></ol-layer>
+                    <ol-layer ol-layer-properties="tiles"></ol-layer>
                     <ol-layer ol-layer-properties="markers"></ol-layer>
                 </openlayers>
             </div>
