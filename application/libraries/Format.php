@@ -254,17 +254,17 @@ class Format {
 			}else{
 				$geo_item = array();
 				$geo_item["type"] = "Feature";
-				
-				if(isset($this->_data->$latitude) && isset($this->_data->$longitude)){
-					$lat_val = $this->_data->$latitude;
-					$lon_val = $this->_data->$longitude;
+				$item = $this->_data[0];
+				if(isset($item->$latitude) && isset($item->$longitude)){
+					$lat_val = $item->$latitude;
+					$lon_val = $item->$longitude;
 					
 					$geo_item["geometry"] 	= array("type" => "Point", "coordinates" => array(floatval($lon_val), floatval($lat_val)));
 
-					unset($this->_data->$latitude);
-					unset($this->_data->$longitude);
+					unset($item->$latitude);
+					unset($item->$latitude);
 				}
-				$geo_item["properties"] = $this->_data;
+				$geo_item["properties"] = $item;
 
 				$this->_data = $geo_item;
 			}

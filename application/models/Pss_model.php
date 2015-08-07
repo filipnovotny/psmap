@@ -42,7 +42,6 @@ class Pss_model extends CI_Model {
         public function get_all(){
         	$this->join_ps_and_projects();
 
-
             //$this->db->where('PS_Confiance',2);
 
         	$query = $this->db->get();
@@ -80,6 +79,18 @@ class Pss_model extends CI_Model {
         		return $it[0];
 			}
         	else return $it;
+        }
+
+        public function get_years_with_counts(){
+            $this->db->select('PR_Annee, count(gpc_projets.idgpc_projets) as PS_Nb_Projects, count(gpc_ps_tmp.idgpc_ps) as PS_Nb_Ps');
+            $this->db->from($this->gpc_ps_table);
+            $this->db->join('gpc_projets', sprintf('%s.idgpc_ps = gpc_projets.PR_PS',$this->gpc_ps_table),'inner');
+            $this->db->where('PS_Supprime',0);
+            $this->db->group_by("PR_Annee");
+
+            $query = $this->db->get();
+
+            return $query->result();
         }
 }
 

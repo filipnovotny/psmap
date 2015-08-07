@@ -26,13 +26,35 @@ function build_style($location){
 		return [style];
 	}
 }
-var app = angular.module('standalonemap', ['openlayers-directive']);
+
+var app = angular.module('standalonemap', ['openlayers-directive', 'nya.bootstrap.select']);
+
+
 app.config(function($interpolateProvider){
     $interpolateProvider.startSymbol('{[{').endSymbol('}]}');
 });
 
-app.controller("defaultcontroller", [ '$scope','$http','$location','olData', 'olHelpers', function($scope,$http,$location,olData, olHelpers) {
-	angular.extend($scope, {
+app.controller("defaultcontroller", [ '$scope','$http','$location','olData', 'olHelpers', function($scope,$http,$location,olData, olHelpers) {	
+	var json_years_promise = $http.get(build_adapted_url($location,"ps/years/?format=json"));
+	json_years_promise.then(
+		function(result){
+			$scope.json_years = result.data;
+			
+		},
+		function(){
+			console.log("could not retrive years");
+		}
+	);
+
+	$scope.$watch('year_selected', function(year) {
+		if(year){
+			console.log("ps/by_year/"+year.PR_Annee+"/?format=json&type=geojson&lat=PS_Latitude&lon=PS_Longitude");
+			$scope.markers.source.url = build_adapted_url($location,"ps/by_year/"+year.PR_Annee+"/?format=json&type=geojson&lat=PS_Latitude&lon=PS_Longitude");
+		}
+	});
+
+	//function init_ol_map(){
+		angular.extend($scope, {
 			defaults: {
 				interactions: {
 					mouseWheelZoom: true
@@ -60,6 +82,7 @@ app.controller("defaultcontroller", [ '$scope','$http','$location','olData', 'ol
 	        },
 
 		});
+	//}
 	var popup = new ol.Overlay.Popup();
 	olData.getMap().then(function(map) {
 		map.addOverlay(popup);
@@ -73,4 +96,5 @@ app.controller("defaultcontroller", [ '$scope','$http','$location','olData', 'ol
 				popup.hide();
             });
         });
+
 } ]);

@@ -23,7 +23,6 @@
     <link href="{{STATIC_URL}}dist/bootstrap/css/bootstrap.min.css" rel="stylesheet">
     <link href="{{STATIC_URL}}dist/openlayers/ol.css" rel="stylesheet">
     <link href="{{STATIC_URL}}dist/ol3-popup/ol3-popup.css" rel="stylesheet">
-    <link href="{{STATIC_URL}}dist/angular-openlayers-directive/angular-openlayers-directive.css" rel="stylesheet">
 
     <!-- Custom styles for this template -->
     <link href="{{STATIC_URL}}map.css" rel="stylesheet">
@@ -38,10 +37,8 @@
   </head>
 {% endblock %}
 {% block body %}
-  <body>
     {% block navbar %}
     <nav class="navbar navbar-inverse navbar-fixed-top">
-        <div class="container">
             <div class="navbar-header">
                 <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar" aria-expanded="false" aria-controls="navbar">
                     {% block navbar_icons %}
@@ -65,40 +62,10 @@
     </nav>
     {% endblock %}
     {% block supercontainer %}
-    <div class="container" ng-app="{% block ng_app_name %}standalonemap{% endblock %}" >
         {% block container %}
-        <div class="row" ng-controller="defaultcontroller">
-            <div class="col-md-8">
-                <h2>Carte</h2>
-                <openlayers lat="48.8567" lon="2.3508" zoom="5" height="400" custom-layers="true" ol-defaults="defaults">
-                    <!--declare the tile layer. HERE REPLACE THE SOURCE-URL by something meaningful -->
-                    <ol-layer source-type="OSM" source-url="http://dtserv.labscinet.com/~dt/demo/tiles/{z}/{x}/{y}.png"></ol-layer>
-                    <!--
-                    The important thing here is the ng-repeat="marker in markers" which is a angularJS macro which says: replicate the whiole ol-marker
-                    html tag as many times as there are elements in the markers array (in the demo.js file)
-                     -->
-                    <ol-marker ng-repeat="marker in markers" ol-marker-properties="marker">
-                        <div class="glyphicon glyphicon-remove" ng-click="close_marker(marker)"></div>
-                        <div ng-bind-html="marker.label.details"></div>
-                        En savoir plus sur <a href="#" ng-click='select_marker(marker)'>le centre EDF de {{marker.name}}</a>
-                    </ol-marker>
-                </openlayers>
-            </div>
-            <div class="col-md-4">
-                <!--Notice the ng-if conditional expression -->
-                <h2 ng-if="cur_marker">Explication de {{cur_marker.name}}</h2>
-                <h2 ng-if="!cur_marker">Cliquez sur le marqueur sur la carte puis sur le lien dans l&#39;infobulle qui s&#39;affiche pour voir la description.</h2>
-
-                <!--This macro says to output the cur_message variable, look at the select_marker function in demo.js -->   
-                <p>{{cur_message}}</p>
-                <img ng-if="cur_marker" src="{{STATIC_URL}}img/transfo.jpg" alt="transformateur" height="200" width="200" />
-                <div ng-bind-html="cur_marker.label.details"></div>
-            </div>
-        </div>
         {% endblock %}
         <hr/>
 
-        <footer >
         {% block footer %}
             <p>&copy; {% block copyright_text %}Labscinet 2015{% endblock %}</p>
         {% endblock %}

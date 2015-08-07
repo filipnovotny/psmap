@@ -11,3 +11,12 @@ body {
     top: 5px;
     right: 8px;
 }
+
+.floatleft{
+	    float: left;
+}
+
+.correctmargins{
+	margin-top: 15px;
+    margin-bottom: 15px;
+}

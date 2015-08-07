@@ -31,9 +31,9 @@ class Ps extends REST_Controller
         $this->response($this->pss_model->get_by_year($year));
     }
 
-    public function index_post()
+    public function years_get()
     {
-        // Create a new book
+        $this->response($this->pss_model->get_years_with_counts());
     }
 }
 
