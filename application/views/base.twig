@@ -24,6 +24,7 @@
     <link href="{{STATIC_URL}}dist/openlayers/ol.css" rel="stylesheet">
     <link href="{{STATIC_URL}}dist/ol3-popup/ol3-popup.css" rel="stylesheet">
 
+    <link rel="stylesheet" href="{{STATIC_URL}}dist/nya-bootstrap-select/nya-bs-select.css"/>
     <!-- Custom styles for this template -->
     <link href="{{STATIC_URL}}map.css" rel="stylesheet">
 
@@ -37,8 +38,10 @@
   </head>
 {% endblock %}
 {% block body %}
+  <body ng-app="{% block ng_app_name %}standalonemap{% endblock %}">
     {% block navbar %}
     <nav class="navbar navbar-inverse navbar-fixed-top">
+        <div class="container-fluid">
             <div class="navbar-header">
                 <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar" aria-expanded="false" aria-controls="navbar">
                     {% block navbar_icons %}
@@ -62,10 +65,12 @@
     </nav>
     {% endblock %}
     {% block supercontainer %}
+    <div class="container-fluid" ng-controller="defaultcontroller">
         {% block container %}
         {% endblock %}
         <hr/>
 
+        <footer>
         {% block footer %}
             <p>&copy; {% block copyright_text %}Labscinet 2015{% endblock %}</p>
         {% endblock %}
