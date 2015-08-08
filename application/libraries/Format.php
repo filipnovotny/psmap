@@ -244,7 +244,7 @@ class Format {
 						$geo_item["geometry"] 	= array("type" => "Point", "coordinates" => array(floatval($lon_val), floatval($lat_val)));
 
 						unset($item->$latitude);
-						unset($item->$latitude);
+						unset($item->$longitude);
 					}
 					$geo_item["properties"] = $item;
 
@@ -254,7 +254,10 @@ class Format {
 			}else{
 				$geo_item = array();
 				$geo_item["type"] = "Feature";
-				$item = $this->_data[0];
+				if(is_array($this->_data))
+					$item = $this->_data[0];
+				else
+					$item = $this->_data;
 				if(isset($item->$latitude) && isset($item->$longitude)){
 					$lat_val = $item->$latitude;
 					$lon_val = $item->$longitude;
@@ -262,7 +265,7 @@ class Format {
 					$geo_item["geometry"] 	= array("type" => "Point", "coordinates" => array(floatval($lon_val), floatval($lat_val)));
 
 					unset($item->$latitude);
-					unset($item->$latitude);
+					unset($item->$longitude);
 				}
 				$geo_item["properties"] = $item;
 

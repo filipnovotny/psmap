@@ -53,7 +53,8 @@ app.factory('CompilerService', ['$compile', '$templateCache', '$q', '$timeout',
     }]);
 
 
-app.controller("defaultcontroller", [ '$scope','$http','$location', 'CompilerService', 'olData', 'olHelpers', function($scope,$http,$location,CompilerService, olData, olHelpers) {	
+app.controller("defaultcontroller", [ '$scope','$http','$location', 'CompilerService', 'olData', 'olHelpers', 
+	function($scope,$http,$location,CompilerService, olData, olHelpers) {	
 	var json_years_promise = $http.get(build_adapted_url($location,"ps/years/?format=json"));
 	json_years_promise.then(
 		function(result){
@@ -66,11 +67,20 @@ app.controller("defaultcontroller", [ '$scope','$http','$location', 'CompilerSer
 	);
 
 	$scope.year_selection_changed = function(year) {
-		if(year){
-			console.log("ps/by_year/"+year.PR_Annee+"/?format=json&type=geojson&lat=PS_Latitude&lon=PS_Longitude");
+		if(year){			
 			$scope.markers.source.url = build_adapted_url($location,"ps/by_year/"+year.PR_Annee+"/?format=json&type=geojson&lat=PS_Latitude&lon=PS_Longitude");
 		}
 	};
+
+	$scope.show_marker_details = function(){
+		$scope.show_marker_details_column=true;
+		var cur_marker_url = build_adapted_url($location,"ps/item/"+$scope.cur_marker.idgpc_ps+"/?format=json&type=geojson&lat=PS_Latitude&lon=PS_Longitude");
+		var cur_marker_promise = $http.get(cur_marker_url);
+		cur_marker_promise.then(function(result){			
+			$scope.cur_marker = result.data.properties;	
+		});
+		
+	}
 
 	//function init_ol_map(){
 		angular.extend($scope, {
@@ -108,16 +118,20 @@ app.controller("defaultcontroller", [ '$scope','$http','$location', 'CompilerSer
 		$scope.$on('openlayers.layers.markers.click', function(evt, feature, olEvent) {
 				var coord = map.getEventCoordinate(olEvent);
 				$scope.cur_marker = feature.getProperties();
-				var html_promise = CompilerService.renderTemplateToString('popup.html', $scope);
+				$scope.cur_marker.draft = true
+				var html_promise = CompilerService.renderTemplateToString('popup.html', $scope);				
 				html_promise.then(function(html){
 			    	popup.show(coord, html);
+			    	if($scope.show_marker_details_column_was)
+			    		$scope.show_marker_details();
 				});
 				
             });
 
 		$scope.$on('openlayers.map.click', function(evt, feature, olEvent) {
 				popup.hide();
-				console.log("hiding...");
+				
+				$scope.show_marker_details_column_was = $scope.show_marker_details_column;
 				$scope.show_marker_details_column = false;
 				$scope.$apply();
 				$scope.$emit();

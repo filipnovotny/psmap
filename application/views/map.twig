@@ -46,13 +46,21 @@
 {% block sidebar %}
     <div class="sidebar-nav">
         <!--Notice the ng-if conditional expression -->
-        <h2 ng-if="cur_marker">Explication de {[{cur_marker.name}]}</h2>
-        <h2 ng-if="!cur_marker">Cliquez sur le marqueur sur la carte puis sur le lien dans l&#39;infobulle qui s&#39;affiche pour voir la description.</h2>
-
-        <!--This macro says to output the cur_message variable, look at the select_marker function in demo.js -->   
-        <p>{[{cur_message}]}</p>
-        <img ng-if="cur_marker" src="img/transfo.jpg" alt="transformateur" height="200" width="200" />
-        <div ng-bind-html="cur_marker.label.details"></div>
+        <h2 ng-if="cur_marker">{[{cur_marker.PS_Nom}]}</h2>
+        <h2 ng-if="!cur_marker">Sans nom</h2>
+        <div class="marker_related">
+            <h4 ng-if="cur_marker.trs.length">Transformateurs pour ce poste:</h4>
+            <h4 ng-if="!cur_marker.trs.length && !cur_marker.draft" class="no_items">Aucun transformateur pour ce poste</h4>
+            <ul ng-if="cur_marker.trs.length" class="trs">
+                <li ng-repeat="tr in cur_marker.trs track by tr.idgpc_tr">{[{tr.TR_No}]} <span ng-if="tr.TR_Puissance">({[{tr.TR_Puissance}]})</span></li>
+            </ul>
+            <h4 ng-if="cur_marker.projects.length">Projets pour ce poste:</h4>
+            <h4 ng-if="!cur_marker.projects.length && !cur_marker.draft" class="no_items">Aucun projet pour ce poste</h4>
+            <h4 ng-if="cur_marker.draft">Chargement...</h4>
+            <ul ng-if="cur_marker.projects.length" class="projects_list">
+                <li ng-repeat="project in cur_marker.projects track by project.idgpc_projets">{[{project.PR_Libelle}]}</li>
+            </ul>            
+        </div>
     </div>
 {% endblock %}
 {% block copyright_text %}Labscinet 2015{% endblock %}
@@ -77,7 +85,7 @@
 {% block inclusions_js_custom %}
 <script type="text/ng-template" id="popup.html">
 <div>
-  <a ng-href='#' ng-click='show_marker_details_column=true'>{[{cur_marker.PS_Nom}]}</a>
+  <a ng-href='#' ng-click='show_marker_details("map")'>{[{cur_marker.PS_Nom}]}</a>
 </div>
 </script>
 
