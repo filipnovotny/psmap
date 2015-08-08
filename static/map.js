@@ -34,7 +34,26 @@ app.config(function($interpolateProvider){
     $interpolateProvider.startSymbol('{[{').endSymbol('}]}');
 });
 
-app.controller("defaultcontroller", [ '$scope','$http','$location','olData', 'olHelpers', function($scope,$http,$location,olData, olHelpers) {	
+app.factory('CompilerService', ['$compile', '$templateCache', '$q', '$timeout',
+    function ($compile, $templateCache, $q, $timeout) {
+        return {
+            renderTemplateToString: function(templateName, scope) {
+		            var deferred = $q.defer();
+		            $timeout(function(){
+		               var template = $templateCache.get(templateName);		               
+		               var linkFn = $compile(template);
+		               var linkedContent = linkFn(scope);
+		               scope.$apply();
+		               deferred.resolve( linkedContent );
+		            }, 0);
+
+		            return deferred.promise;
+		    }
+        }
+    }]);
+
+
+app.controller("defaultcontroller", [ '$scope','$http','$location', 'CompilerService', 'olData', 'olHelpers', function($scope,$http,$location,CompilerService, olData, olHelpers) {	
 	var json_years_promise = $http.get(build_adapted_url($location,"ps/years/?format=json"));
 	json_years_promise.then(
 		function(result){
@@ -46,12 +65,12 @@ app.controller("defaultcontroller", [ '$scope','$http','$location','olData', 'ol
 		}
 	);
 
-	$scope.$watch('year_selected', function(year) {
+	$scope.year_selection_changed = function(year) {
 		if(year){
 			console.log("ps/by_year/"+year.PR_Annee+"/?format=json&type=geojson&lat=PS_Latitude&lon=PS_Longitude");
 			$scope.markers.source.url = build_adapted_url($location,"ps/by_year/"+year.PR_Annee+"/?format=json&type=geojson&lat=PS_Latitude&lon=PS_Longitude");
 		}
-	});
+	};
 
 	//function init_ol_map(){
 		angular.extend($scope, {
@@ -88,12 +107,20 @@ app.controller("defaultcontroller", [ '$scope','$http','$location','olData', 'ol
 		map.addOverlay(popup);
 		$scope.$on('openlayers.layers.markers.click', function(evt, feature, olEvent) {
 				var coord = map.getEventCoordinate(olEvent);
-				var props = feature.getProperties();
-			    popup.show(coord, props.PS_Nom);
+				$scope.cur_marker = feature.getProperties();
+				var html_promise = CompilerService.renderTemplateToString('popup.html', $scope);
+				html_promise.then(function(html){
+			    	popup.show(coord, html);
+				});
+				
             });
 
 		$scope.$on('openlayers.map.click', function(evt, feature, olEvent) {
 				popup.hide();
+				console.log("hiding...");
+				$scope.show_marker_details_column = false;
+				$scope.$apply();
+				$scope.$emit();
             });
         });
 

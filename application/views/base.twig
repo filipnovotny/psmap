@@ -65,18 +65,26 @@
     </nav>
     {% endblock %}
     {% block supercontainer %}
-    <div class="container-fluid" ng-controller="defaultcontroller">
-        {% block container %}
-        {% endblock %}
-        <hr/>
+<div ng-controller="defaultcontroller">
+    <div id="wrapper"  ng-class="show_marker_details_column ? '' : 'toggled'">
+        <div id="sidebar-wrapper">
+            {% block sidebar %}
+            {% endblock %}
+        </div>
+        <div class="container-fluid map-wrapper">
+            {% block container %}
+            {% endblock %}
+            <hr/>
 
-        <footer>
-        {% block footer %}
-            <p>&copy; {% block copyright_text %}Labscinet 2015{% endblock %}</p>
-        {% endblock %}
-        </footer>
+            <footer>
+            {% block footer %}
+                <p>&copy; {% block copyright_text %}Labscinet 2015{% endblock %}</p>
+            {% endblock %}
+            </footer>
 
-    </div><!-- /.container -->
+        </div><!-- /.container -->
+    </div><!-- /.wrapper -->
+</div>
     {% endblock %}
     {% block inclusions_js %}    
     <script src="{{STATIC_URL}}settings{% if config.JSDEBUG %}_debug{% endif %}.js"></script>

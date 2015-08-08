@@ -19,7 +19,7 @@
             <h2 class="floatleft correctmargins">Projets pour l&#39;ann&eacute;e: </h2>
             
             <div class="panel-body floatleft">
-                <ol id="track_by_examples" class="nya-bs-select" ng-model="year_selected" title="Toutes les ann&eacute;es">
+                <ol id="track_by_examples" class="nya-bs-select" ng-model="year_selected" title="Toutes les ann&eacute;es" ng-change="year_selection_changed(year_selected)">
                     <li nya-bs-option="year in json_years track by year.PR_Annee" ng-switch="year.PR_Annee">                        
                         <a ng-switch-when="0">
                             Non d&eacute;fini ({[{year.PS_Nb_Ps}]} projets)
@@ -33,26 +33,28 @@
             </div>
     </div>
     <div class="row">
-        <div class="col-md-8">            
+        <div class="col-md-12">            
             <openlayers lat="48.8567" lon="2.3508" zoom="5" custom-layers="true" ol-defaults="defaults">
                 <!--declare the tile layer. HERE REPLACE THE SOURCE-URL by something meaningful -->
                 <ol-layer ol-layer-properties="tiles"></ol-layer>
                 <ol-layer ol-layer-properties="markers"></ol-layer>
             </openlayers>
         </div>
-        <div class="col-md-4">
-            <!--Notice the ng-if conditional expression -->
-            <h2 ng-if="cur_marker">Explication de {[{cur_marker.name}]}</h2>
-            <h2 ng-if="!cur_marker">Cliquez sur le marqueur sur la carte puis sur le lien dans l&#39;infobulle qui s&#39;affiche pour voir la description.</h2>
-
-            <!--This macro says to output the cur_message variable, look at the select_marker function in demo.js -->   
-            <p>{[{cur_message}]}</p>
-            <img ng-if="cur_marker" src="img/transfo.jpg" alt="transformateur" height="200" width="200" />
-            <div ng-bind-html="cur_marker.label.details"></div>
-        </div>
+        
     </div>
 {% endblock %}
+{% block sidebar %}
+    <div class="sidebar-nav">
+        <!--Notice the ng-if conditional expression -->
+        <h2 ng-if="cur_marker">Explication de {[{cur_marker.name}]}</h2>
+        <h2 ng-if="!cur_marker">Cliquez sur le marqueur sur la carte puis sur le lien dans l&#39;infobulle qui s&#39;affiche pour voir la description.</h2>
 
+        <!--This macro says to output the cur_message variable, look at the select_marker function in demo.js -->   
+        <p>{[{cur_message}]}</p>
+        <img ng-if="cur_marker" src="img/transfo.jpg" alt="transformateur" height="200" width="200" />
+        <div ng-bind-html="cur_marker.label.details"></div>
+    </div>
+{% endblock %}
 {% block copyright_text %}Labscinet 2015{% endblock %}
 
 
@@ -73,5 +75,12 @@
 
 {% endblock %}
 {% block inclusions_js_custom %}
+<script type="text/ng-template" id="popup.html">
+<div>
+  <a ng-href='#' ng-click='show_marker_details_column=true'>{[{cur_marker.PS_Nom}]}</a>
+</div>
+</script>
+
+
 <script src="{{STATIC_URL}}map.js"></script>
 {% endblock %}
