@@ -69,6 +69,9 @@ app.controller("defaultcontroller", [ '$scope','$http','$location', 'CompilerSer
 	$scope.year_selection_changed = function(year) {
 		if(year){			
 			$scope.markers.source.url = build_adapted_url($location,"ps/by_year/"+year.PR_Annee+"/?format=json&type=geojson&lat=PS_Latitude&lon=PS_Longitude");
+			popup.hide();
+			$scope.show_marker_details_column_was = $scope.show_marker_details_column;
+			$scope.show_marker_details_column = false;
 		}
 	};
 
