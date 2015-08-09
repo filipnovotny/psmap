@@ -2,7 +2,9 @@
 
 {% block title_text %}Demo de carte autonome{% endblock %}
 
-{% block navbar_title_text %}Carte des centres{% endblock %}
+{% block navbar_title_text %}Carte des Postes Source{% endblock %}
+
+{% block additional_wrapper_tags %}ng-class="show_marker_details_column ? '' : 'toggled'"{% endblock %}
 
 {% block navbar_links %}
 <li class="active"><a href="{{BASE_URL}}">Carte</a></li>
@@ -15,9 +17,8 @@
 {% block container %}
     <div class="row">
         <div class="col-md-8">
-            
-            <h2 class="floatleft correctmargins">Projets pour l&#39;ann&eacute;e: </h2>
-            
+            <h1 ng-if="false">Votre page web est en train de se charger...</h1>
+            <h2 class="floatleft correctmargins">Projets pour l&#39;ann&eacute;e: </h2>            
             <div class="panel-body floatleft">
                 <ol id="track_by_examples" class="nya-bs-select" ng-model="year_selected" title="Toutes les ann&eacute;es" ng-change="year_selection_changed(year_selected)">
                     <li nya-bs-option="year in json_years track by year.PR_Annee" ng-switch="year.PR_Annee">                        
@@ -29,8 +30,11 @@
                         </a>
                     </li>
                 </ol>
-            </div>
-            </div>
+            </div>            
+        </div>
+        <div ng-if="debug" class="col-md-4">
+            <h2 class="debug_message">Le mode DEBUG est activ&eacute;.</h2>
+        </div>
     </div>
     <div class="row">
         <div class="col-md-12">            
@@ -44,6 +48,7 @@
     </div>
 {% endblock %}
 {% block sidebar %}
+<div id="sidebar-wrapper">
     <div class="sidebar-nav">
         <!--Notice the ng-if conditional expression -->
         <h2 ng-if="cur_marker">{[{cur_marker.PS_Nom}]}</h2>
@@ -65,6 +70,7 @@
             </div>
         </div>
     </div>
+</div>
 {% endblock %}
 {% block copyright_text %}Labscinet 2015{% endblock %}
 

@@ -66,11 +66,9 @@
     {% endblock %}
     {% block supercontainer %}
 <div ng-controller="defaultcontroller">
-    <div id="wrapper"  ng-class="show_marker_details_column ? '' : 'toggled'">
-        <div id="sidebar-wrapper">
-            {% block sidebar %}
-            {% endblock %}
-        </div>
+    <div id="wrapper"  {% block additional_wrapper_tags %}{% endblock %}>
+        {% block sidebar %}           
+        {% endblock %}
         <div class="container-fluid map-wrapper">
             {% block container %}
             {% endblock %}

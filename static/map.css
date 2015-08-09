@@ -31,6 +31,10 @@ body {
 	color: #ff0000;
 }
 
+h2.debug_message{
+    color: #ff0000;
+}
+
 #wrapper {
     padding-right: 0;
     -webkit-transition: all 0.5s ease;

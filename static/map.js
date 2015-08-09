@@ -1,3 +1,17 @@
+//reload page if angular has failed to load
+
+function check_page_load(wait_time){
+	setTimeout(function(){
+		if($(".nya-bs-select li").length<2){
+			console.log("Page didn't load properly, retrying...");
+			location.reload();
+			check_page_load(wait_time*2);
+		} 
+	}, wait_time);
+}
+
+check_page_load(5000);
+
 function build_adapted_url($location,ending){
 	return s.sprintf("%s%s",  $location.absUrl(),ending);
 }
@@ -54,7 +68,9 @@ app.factory('CompilerService', ['$compile', '$templateCache', '$q', '$timeout',
 
 
 app.controller("defaultcontroller", [ '$scope','$http','$location', 'CompilerService', 'olData', 'olHelpers', 
-	function($scope,$http,$location,CompilerService, olData, olHelpers) {	
+		function($scope,$http,$location,CompilerService, olData, olHelpers) {	
+
+	$scope.debug = settings.DEBUG;
 	var json_years_promise = $http.get(build_adapted_url($location,"ps/years/?format=json"));
 	json_years_promise.then(
 		function(result){
@@ -120,7 +136,6 @@ app.controller("defaultcontroller", [ '$scope','$http','$location', 'CompilerSer
 	$scope.$on('openlayers.layers.markers.click', function(evt, feature, olEvent) {
 			$scope.$apply(function(){
 				var coord = feature.getGeometry().getCoordinates();
-				console.log(coord);
 				$scope.cur_marker = feature.getProperties();
 				$scope.cur_marker.draft = true
 				var html_promise = CompilerService.renderTemplateToString('popup.html', $scope);				
