@@ -87,41 +87,40 @@ app.controller("defaultcontroller", [ '$scope','$http','$location', 'CompilerSer
 		
 	}
 
-	//function init_ol_map(){
-		angular.extend($scope, {
-			defaults: {
-				interactions: {
-					mouseWheelZoom: true
-				},
-				events: {
-                    layers: [ 'click' ],
-                    map: [ 'click' ]
-                }
+	angular.extend($scope, {
+		defaults: {
+			interactions: {
+				mouseWheelZoom: true
 			},
-			markers : {
-				name : 'markers', 
-	            source: {
-	                type: 'GeoJSON',
-	                url: build_adapted_url($location,"ps/?format=json&type=geojson&lat=PS_Latitude&lon=PS_Longitude"),
-	            },
-	            style: build_style($location),
+			events: {
+                layers: [ 'click' ],
+                map: [ 'click' ]
+            }
+		},
+		markers : {
+			name : 'markers', 
+            source: {
+                type: 'GeoJSON',
+                url: build_adapted_url($location,"ps/?format=json&type=geojson&lat=PS_Latitude&lon=PS_Longitude"),
+                projection: 'EPSG:3857'
+            },
+            style: build_style($location),
 
-	        },
-	        tiles : {
-				name : 'tiles',
-				source: {
-	                type: 'OSM',
-	                url: build_adapted_url($location,"tiles/{z}/{x}/{y}.png"),
-	            },
-	        },
+        },
+        tiles : {
+			name : 'tiles',
+			source: {
+                type: 'OSM',
+                url: build_adapted_url($location,"tiles/{z}/{x}/{y}.png"),
+            },
+        },
 
-		});
-	//}
-	var popup = new ol.Overlay.Popup();
-	olData.getMap().then(function(map) {
-		map.addOverlay(popup);
-		$scope.$on('openlayers.layers.markers.click', function(evt, feature, olEvent) {
-				var coord = map.getEventCoordinate(olEvent);
+	});
+
+	$scope.$on('openlayers.layers.markers.click', function(evt, feature, olEvent) {
+			$scope.$apply(function(){
+				var coord = feature.getGeometry().getCoordinates();
+				console.log(coord);
 				$scope.cur_marker = feature.getProperties();
 				$scope.cur_marker.draft = true
 				var html_promise = CompilerService.renderTemplateToString('popup.html', $scope);				
@@ -130,17 +129,21 @@ app.controller("defaultcontroller", [ '$scope','$http','$location', 'CompilerSer
 			    	if($scope.show_marker_details_column_was)
 			    		$scope.show_marker_details();
 				});
-				
-            });
-
-		$scope.$on('openlayers.map.click', function(evt, feature, olEvent) {
-				popup.hide();
-				
-				$scope.show_marker_details_column_was = $scope.show_marker_details_column;
-				$scope.show_marker_details_column = false;
-				$scope.$apply();
-				$scope.$emit();
-            });
+			});	
         });
+
+	$scope.$on('openlayers.map.click', function(evt, feature, olEvent) {
+			$scope.$apply(function(){
+				popup.hide();
+			
+				$scope.show_marker_details_column_was = $scope.show_marker_details_column;
+				$scope.show_marker_details_column = false;				
+			});				
+        });
+
+	var popup = new ol.Overlay.Popup();
+	olData.getMap().then(function(map) {
+		map.addOverlay(popup);		
+    });
 
 } ]);
