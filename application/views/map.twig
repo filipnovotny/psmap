@@ -36,9 +36,9 @@
             <h2 class="debug_message">Le mode DEBUG est activ&eacute;.</h2>
         </div>
     </div>
-    <div class="row">
-        <div class="col-md-12">            
-            <openlayers lat="45.76" lon="10.8400" zoom="6" custom-layers="true" ol-defaults="defaults">
+    <div class="row" ng-style="{height: mapHeight + 'px'}">
+        <div class="col-md-12" ng-style="{height: mapHeight + 'px'}">            
+            <openlayers lat="45.76" lon="10.8400" zoom="6" custom-layers="true" ol-defaults="defaults" ng-style="{height: mapHeight + 'px'}">
                 <!--declare the tile layer. HERE REPLACE THE SOURCE-URL by something meaningful -->
                 <ol-layer ol-layer-properties="tiles"></ol-layer>
                 <ol-layer ol-layer-properties="markers"></ol-layer>

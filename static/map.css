@@ -12,6 +12,10 @@ body {
 	left:0;
 }
 
+.height100{
+    height: 100%;
+}
+
 .glyphicon {
 	position: absolute;
     top: 5px;
@@ -19,7 +23,7 @@ body {
 }
 
 .floatleft{
-	    float: left;
+    float: left;
 }
 
 .correctmargins{

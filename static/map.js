@@ -67,10 +67,41 @@ app.factory('CompilerService', ['$compile', '$templateCache', '$q', '$timeout',
     }]);
 
 
+function detectIE() {
+    var ua = window.navigator.userAgent;
+
+    var msie = ua.indexOf('MSIE ');
+    if (msie > 0) {
+        // IE 10 or older => return version number
+        return parseInt(ua.substring(msie + 5, ua.indexOf('.', msie)), 10);
+    }
+
+    var trident = ua.indexOf('Trident/');
+    if (trident > 0) {
+        // IE 11 => return version number
+        var rv = ua.indexOf('rv:');
+        return parseInt(ua.substring(rv + 3, ua.indexOf('.', rv)), 10);
+    }
+
+    var edge = ua.indexOf('Edge/');
+    if (edge > 0) {
+       // IE 12 => return version number
+       return parseInt(ua.substring(edge + 5, ua.indexOf('.', edge)), 10);
+    }
+
+    // other browser
+    return false;
+}
+
+var msie = detectIE();
+
 app.controller("defaultcontroller", [ '$scope','$http','$location', 'CompilerService', 'olData', 'olHelpers', 
 		function($scope,$http,$location,CompilerService, olData, olHelpers) {	
 
 	$scope.debug = settings.DEBUG;
+	if(msie && msie<11)
+		$scope.mapHeight = (window.innerHeight-100);
+
 	var json_years_promise = $http.get(build_adapted_url($location,"ps/years/?format=json"));
 	json_years_promise.then(
 		function(result){
@@ -158,7 +189,12 @@ app.controller("defaultcontroller", [ '$scope','$http','$location', 'CompilerSer
 
 	var popup = new ol.Overlay.Popup();
 	olData.getMap().then(function(map) {
-		map.addOverlay(popup);		
+		map.addOverlay(popup);	
+		map.updateSize();
+		if(msie && msie<11){
+			setTimeout( function() { map.updateSize();}, 200);	
+			setTimeout( function() { map.updateSize();}, 2000);	
+		}
     });
 
 } ]);
