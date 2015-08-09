@@ -4,13 +4,6 @@ class Pss_model extends CI_Model {
 		protected $gpc_ps_table;
 		protected $pk;
 
-        protected function make_kml_item($ps){
-            foreach (get_object_vars($ps) as $attribute => $value) {
-               
-            }
-
-        }
-
         public function __construct()
         {
             $this->load->database();
@@ -67,7 +60,7 @@ class Pss_model extends CI_Model {
         }
 
         public function get_item(){
-        	$this->db->select('idgpc_ps, PS_Nom, PS_Nat, PS_Longitude, PS_Latitude');
+        	$this->db->select('idgpc_ps, PS_Nom, PS_Nat, PS_Longitude, PS_Latitude, PS_Commentaire');
 			$this->db->from($this->gpc_ps_table);
 			$this->db->where('idgpc_ps',$this->pk);
 			$query = $this->db->get();

@@ -121,7 +121,7 @@ body {
     background: none;
 }
 
-@media(min-width:768px) {
+@media(min-width:100px) {
     #wrapper {
         padding-right: 500px;
     }

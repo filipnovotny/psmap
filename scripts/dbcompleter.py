@@ -64,7 +64,12 @@ def get_coordinates_by_name(kml_filename,name,code, match_class=0):
 		if(compare_names(transfo_light.name, name) and transfo_light.short_name == code) and match_class==0:
 			places[0][transfo_light.short_name] = (float(coords[1]),float(coords[0]))
 			return code,places[0][code],0,"Correspondance forte"
-		elif (compare_names(transfo_light.name, name)) and match_class==1: #same name but different code		
+		elif (transfo_light.short_name == code) and match_class==1: #same code but different name
+			if transfo_light.short_name in places[0]:
+				continue
+			places[0][code] = (float(coords[1]),float(coords[0]))
+			return code,places[0][code],0,"Correspondance par code seul, nom non modifié. Actuel(BDD): %s Fichier edf: %s" % (name,transfo_light.name)
+		elif (compare_names(transfo_light.name, name)) and match_class==2: #same name but different code		
 			#this name is already used (but with different code)and there are coordinates for it			
 			#or the place has a new code which matches coordinates
 			if transfo_light.short_name in places[0]:
@@ -72,27 +77,7 @@ def get_coordinates_by_name(kml_filename,name,code, match_class=0):
 			
 			places[1][name] = (float(coords[1]),float(coords[0]))			
 			return transfo_light.short_name,places[1][name],0,"Correspondance par nom seul, code mis a jour. Ancien(BDD): %s Nouveau (fichier edf): %s" % (code,transfo_light.short_name)
-		elif (transfo_light.short_name == code) and match_class==2: #same code but different name
-			if code in places[0] and name in places[1]: #my code and name match are already taken
-				
-				try:
-					code[-1] = str(int(code[-1])+1)
-				except:
-					code = code[:-1] + "0"
-					
-				places[0][code] = (float(coords[1]),float(coords[0]))
-				return code,places[0][code],1
-			else:
-				if code in places[0]: #has the same code but is 
-					#places[1][name+"_dup"] = coords
-					print("dupplicate record! : %s,%s" % (code,name))
-					continue
-				elif name in places[1]: #
-					print("dupplicate name but its ok! : %s,%s" % (code,name))
-					places[0][code] = (float(coords[1]),float(coords[0]))				
-				else:
-					places[0][code] = (float(coords[1]),float(coords[0]))
-			return code,places[0][code],0,"Correspondance par code seul, nom non modifié. Actuel(BDD): %s Fichier edf: %s" % (name,transfo_light.name)
+		
 
 		elif (similar(process_name(transfo_light.name) , process_name(name))) > 0.6 and match_class==3:
 			

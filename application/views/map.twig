@@ -34,7 +34,7 @@
     </div>
     <div class="row">
         <div class="col-md-12">            
-            <openlayers lat="48.8567" lon="2.3508" zoom="5" custom-layers="true" ol-defaults="defaults">
+            <openlayers lat="48.8567" lon="2.3508" zoom="6" custom-layers="true" ol-defaults="defaults">
                 <!--declare the tile layer. HERE REPLACE THE SOURCE-URL by something meaningful -->
                 <ol-layer ol-layer-properties="tiles"></ol-layer>
                 <ol-layer ol-layer-properties="markers"></ol-layer>
@@ -59,7 +59,10 @@
             <h4 ng-if="cur_marker.draft">Chargement...</h4>
             <ul ng-if="cur_marker.projects.length" class="projects_list">
                 <li ng-repeat="project in cur_marker.projects track by project.idgpc_projets">{[{project.PR_Libelle}]}</li>
-            </ul>            
+            </ul>
+            <div ng-if="debug">
+                Commentaires: {[{cur_marker.PS_Commentaire}]}
+            </div>
         </div>
     </div>
 {% endblock %}

@@ -80,7 +80,9 @@ app.controller("defaultcontroller", [ '$scope','$http','$location', 'CompilerSer
 		var cur_marker_url = build_adapted_url($location,"ps/item/"+$scope.cur_marker.idgpc_ps+"/?format=json&type=geojson&lat=PS_Latitude&lon=PS_Longitude");
 		var cur_marker_promise = $http.get(cur_marker_url);
 		cur_marker_promise.then(function(result){			
-			$scope.cur_marker = result.data.properties;	
+			$scope.cur_marker = result.data.properties;
+			$scope.cur_marker.draft = false;			
+			$scope.debug = settings.DEBUG;			
 		});
 		
 	}
