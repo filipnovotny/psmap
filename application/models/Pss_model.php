@@ -60,7 +60,7 @@ class Pss_model extends CI_Model {
         }
 
         public function get_item(){
-        	$this->db->select('idgpc_ps, PS_Nom, PS_Nat, PS_Longitude, PS_Latitude, PS_Commentaire');
+        	$this->db->select('idgpc_ps, PS_Nom, PS_Nat, PS_Longitude, PS_Latitude, PS_Confiance, PS_Commentaire');
 			$this->db->from($this->gpc_ps_table);
 			$this->db->where('idgpc_ps',$this->pk);
 			$query = $this->db->get();
@@ -72,6 +72,14 @@ class Pss_model extends CI_Model {
         		return $it[0];
 			}
         	else return $it;
+        }
+
+        public function patch_item($data){
+            $this->db->where('idgpc_ps', $this->pk);
+            $this->db->update($this->gpc_ps_table, $data);
+            $affected_rows = $this->db->affected_rows();
+
+            return $affected_rows;
         }
 
         public function get_years_with_counts(){

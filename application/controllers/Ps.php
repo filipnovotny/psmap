@@ -26,6 +26,14 @@ class Ps extends REST_Controller
 		$this->response($me);
     }
 
+    public function item_patch($id)
+    {
+        $data = $this->patch();
+        $this->pss_model->set_pk($id);
+        $rows_affected = $this->pss_model->patch_item($data);
+        $this->response($rows_affected);
+    }
+
     public function by_year_get($year)
     {
         $this->response($this->pss_model->get_by_year($year));

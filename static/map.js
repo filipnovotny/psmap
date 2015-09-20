@@ -67,39 +67,11 @@ app.factory('CompilerService', ['$compile', '$templateCache', '$q', '$timeout',
     }]);
 
 
-function detectIE() {
-    var ua = window.navigator.userAgent;
-
-    var msie = ua.indexOf('MSIE ');
-    if (msie > 0) {
-        // IE 10 or older => return version number
-        return parseInt(ua.substring(msie + 5, ua.indexOf('.', msie)), 10);
-    }
-
-    var trident = ua.indexOf('Trident/');
-    if (trident > 0) {
-        // IE 11 => return version number
-        var rv = ua.indexOf('rv:');
-        return parseInt(ua.substring(rv + 3, ua.indexOf('.', rv)), 10);
-    }
-
-    var edge = ua.indexOf('Edge/');
-    if (edge > 0) {
-       // IE 12 => return version number
-       return parseInt(ua.substring(edge + 5, ua.indexOf('.', edge)), 10);
-    }
-
-    // other browser
-    return false;
-}
-
-var msie = detectIE();
-
 app.controller("defaultcontroller", [ '$scope','$http','$location', 'CompilerService', 'olData', 'olHelpers', 
 		function($scope,$http,$location,CompilerService, olData, olHelpers) {	
 
 	$scope.debug = settings.DEBUG;
-	if(msie && msie<11)
+	if($.browser.msie && $.browser.versionNumber<11)
 		$scope.mapHeight = (window.innerHeight-100);
 
 	var json_years_promise = $http.get(build_adapted_url($location,"ps/years/?format=json"));
@@ -128,10 +100,38 @@ app.controller("defaultcontroller", [ '$scope','$http','$location', 'CompilerSer
 		var cur_marker_promise = $http.get(cur_marker_url);
 		cur_marker_promise.then(function(result){			
 			$scope.cur_marker = result.data.properties;
+			$scope.cur_marker.coordinates = [result.data.geometry.coordinates[0],result.data.geometry.coordinates[1]];
 			$scope.cur_marker.draft = false;			
 			$scope.debug = settings.DEBUG;			
 		});
 		
+	}
+
+	$scope.debug_update_cur_marker = function(){
+		var cur_marker_url = build_adapted_url($location,"ps/item/"+$scope.cur_marker.idgpc_ps+"/?format=json");
+		var payload = {
+				"PS_Longitude" : $scope.cur_marker.coordinates[0],
+				"PS_Latitude" : $scope.cur_marker.coordinates[1],
+				"PS_Nom" : $scope.cur_marker.PS_Nom,
+				"PS_Nat" : $scope.cur_marker.PS_Nat
+			};
+		if($scope.cur_marker.mark_as_reliable)
+			payload = angular.extend({"PS_Confiance" : 0}, payload);
+
+		var cur_marker_promise = $http.patch(cur_marker_url,payload);
+
+		cur_marker_promise.then(function(result){			
+			$scope.markers.source.url = build_adapted_url($location,"ps/?format=json&type=geojson&lat=PS_Latitude&lon=PS_Longitude");
+			if(popup.visible){
+				var newCoord = ol.proj.transform($scope.cur_marker.coordinates, 'EPSG:4326', 'EPSG:3857');
+				popup.show(newCoord);
+			}
+			$scope.markers.source.refresh = !$scope.markers.source.refresh;
+		});
+	}
+
+	$scope.debug_is_editable = function(marker){
+		return marker && marker.PS_Confiance && parseInt(marker.PS_Confiance)>0;
 	}
 
 	angular.extend($scope, {
@@ -191,7 +191,8 @@ app.controller("defaultcontroller", [ '$scope','$http','$location', 'CompilerSer
 	olData.getMap().then(function(map) {
 		map.addOverlay(popup);	
 		map.updateSize();
-		if(msie && msie<11){
+		if($.browser.msie && $.browser.versionNumber<11){
+			$scope.mapHeight = (window.innerHeight-100);
 			setTimeout( function() { map.updateSize();}, 200);	
 			setTimeout( function() { map.updateSize();}, 2000);	
 		}

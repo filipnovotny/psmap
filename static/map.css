@@ -35,6 +35,10 @@ body {
 	color: #ff0000;
 }
 
+.debug_correct_fields{
+    color: #ff0000;
+}
+
 h2.debug_message{
     color: #ff0000;
 }
